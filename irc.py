@@ -1,5 +1,5 @@
 import socket
-import tools
+#import tools
 import sys
 
 class IRC:

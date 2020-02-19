@@ -2,6 +2,7 @@ from irc import *
 import os
 import random
 import threading
+import filter
 
 
 def outgoing():
@@ -16,6 +17,7 @@ def outgoing():
         # if any of these commands are recognized it performs them, otherwise just sends the message.
         if message:
             # only changed which variable is being compared to string "exit"
+            print(message)
             if cmd == "exit":
                 irc.close()
                 stop_threads = True
@@ -26,6 +28,10 @@ def outgoing():
             # command for unblocking a user. Assumes the blocked user is the 2nd argument of the message
             elif cmd == "/unblock":
                 blocklist.remove(message.split()[1])
+            # command for filtering
+            elif cmd == "/f":
+                print("here")
+                handle.handle(message)
             else:
                 irc.send(channel, message)
         if stop_threads:
@@ -36,6 +42,7 @@ def incoming():
     while True:
         global stop_threads
         global blocklist
+        global handle
         blocked = False
         text = irc.get_text()
         # checks if any mention of a blocked user is in the message. If so blocks the message.
@@ -45,12 +52,14 @@ def incoming():
                 blocked = True
         # if no mention of a blocked user in message, prints the message.
         if not blocked:
+            text = handle.handle(text)
             print("\n", text)
 
         if stop_threads:
             break
 
 
+handle = filter.Handler()
 blocklist = []  # list of blocked users
 channel = input("Enter channel name:> ")
 server = "irc.freenode.net"
