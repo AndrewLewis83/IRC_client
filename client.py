@@ -38,14 +38,20 @@ def incoming():
         global blocklist
         blocked = False
         text = irc.get_text()
+        if text != None:
+            # the message is always after the : symbol
+            message = text.split(':')
+            # user is always before the ! symbol
+            user = text.split('!')
+        user[0].strip()
         # checks if any mention of a blocked user is in the message. If so blocks the message.
         # this approach is overkill, and I will narrow it down to only messages sent by blocked users
         for i in blocklist:
-            if i in text:
+            if i in user[0]:
                 blocked = True
         # if no mention of a blocked user in message, prints the message.
         if not blocked:
-            print("\n", text)
+            print("\n", user[0], ": ", message[len(message) - 1])
 
         if stop_threads:
             break
