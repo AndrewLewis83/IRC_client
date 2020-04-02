@@ -1,6 +1,8 @@
 import socket
-import tools
+#import tools
 import sys
+import filter
+
 
 class IRC:
 

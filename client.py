@@ -26,6 +26,9 @@ def outgoing():
             # command for unblocking a user. Assumes the blocked user is the 2nd argument of the message
             elif cmd == "/unblock":
                 blocklist.remove(message.split()[1])
+                # command for filtering
+            elif cmd == "/f":
+                handle.handle(message)
             else:
                 irc.send(channel, message)
         if stop_threads:
@@ -51,12 +54,14 @@ def incoming():
                 blocked = True
         # if no mention of a blocked user in message, prints the message.
         if not blocked:
-            print("\n", user[0], ": ", message[len(message) - 1])
+
+            message = handle.handle(message[len(message) - 1])
+            print("\n", user[0], ": ", message )
 
         if stop_threads:
             break
 
-
+handle = filter.Handler()
 blocklist = []  # list of blocked users
 channel = input("Enter channel name:> ")
 server = "irc.freenode.net"
