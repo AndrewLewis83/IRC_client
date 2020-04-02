@@ -30,7 +30,6 @@ def outgoing():
                 blocklist.remove(message.split()[1])
             # command for filtering
             elif cmd == "/f":
-                print("here")
                 handle.handle(message)
             else:
                 irc.send(channel, message)
